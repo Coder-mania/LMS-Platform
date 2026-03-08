@@ -1,6 +1,7 @@
-# FLI Green Skills Academy — LMS Platform
+# FLI Green Skills Academy - LMS Platform
 
-A full-stack Learning Management System built for the **FLI Green Skills Academy**, delivering structured climate leadership and green skills education through interactive modules, quizzes, flip cards, reflections, and project-based learning.
+A full-stack Learning Management System built for the **FLI Green Skills Academy**.  
+The platform delivers structured climate leadership and green skills education through interactive modules, quizzes, flip cards, reflections, and project-based learning.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
@@ -13,33 +14,35 @@ A full-stack Learning Management System built for the **FLI Green Skills Academy
 ## Features
 
 ### Learning Experience
-- **3 Modules, 12 Units** — Structured curriculum covering the global metacrisis, green economics, and climate innovation
-- **Interactive Flip Cards** — 3D animated concept cards for key terms and definitions
-- **Quizzes with Scoring** — Multiple-choice assessments with 60% pass threshold and instant feedback
-- **Reflection Prompts** — Guided journaling that saves responses per unit
-- **YouTube Video Embeds** — Embedded video lessons within each unit
-- **Progress Tracking** — Per-unit completion with overall progress dashboard
-- **Milestone Project** — System Mapping Challenge with text submissions
+
+- **3 Modules, 12 Units**: A structured curriculum that explores the global metacrisis, green economics, and climate innovation
+- **Interactive Flip Cards**: 3D animated cards used to explain key concepts and definitions
+- **Quizzes with Scoring**: Multiple-choice assessments with a 60% passing score and instant feedback
+- **Reflection Prompts**: Guided journaling with responses saved for each unit
+- **YouTube Video Embeds**: Video lessons embedded directly inside each unit
+- **Progress Tracking**: Track completion per unit with a progress dashboard
+- **Milestone Project**: System Mapping Challenge with text-based submissions
 
 ### Platform
-- **Role-Based Access** — Student and Admin roles
-- **Admin Dashboard** — Platform stats, user management, submission review
-- **Responsive Sidebar Navigation** — Collapsible sidebar with mobile support
-- **Server-Side Rendering** — Next.js App Router with server components for fast page loads
-- **Secure Authentication** — Email/password auth with bcrypt hashing and JWT sessions
+
+- **Role-Based Access**: Separate roles for Students and Admins
+- **Admin Dashboard**: View platform statistics, manage users, and review submissions
+- **Responsive Sidebar Navigation**: Collapsible sidebar that works on desktop and mobile
+- **Server-Side Rendering**: Built with the Next.js App Router and server components for fast page loads
+- **Secure Authentication**: Email and password authentication using bcrypt hashing and JWT sessions
 
 ---
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|------|-----------|
 | Framework | Next.js 14 (App Router) |
 | Language | TypeScript 5 |
-| Styling | Tailwind CSS 3.4 + shadcn/ui components |
+| Styling | Tailwind CSS 3.4 + shadcn/ui |
 | Database | PostgreSQL (Supabase) |
 | ORM | Prisma 6 |
-| Auth | NextAuth.js 4 (Credentials Provider) |
+| Authentication | NextAuth.js 4 (Credentials Provider) |
 | Icons | Lucide React |
 | Deployment | Vercel (recommended) |
 
@@ -58,22 +61,22 @@ lms-app/
 │   │   ├── page.tsx           # Home (redirect)
 │   │   ├── login/             # Login page
 │   │   ├── signup/            # Signup page
-│   │   ├── (authenticated)/   # Protected route group
-│   │   │   ├── dashboard/     # Dashboard with progress overview
-│   │   │   ├── modules/       # Module listing & detail
+│   │   ├── (authenticated)/   # Protected routes
+│   │   │   ├── dashboard/     # Progress overview
+│   │   │   ├── modules/       # Module listing and details
 │   │   │   ├── units/         # Unit lesson pages
 │   │   │   ├── project/       # Milestone project submission
 │   │   │   ├── profile/       # User profile
 │   │   │   └── admin/         # Admin dashboard
 │   │   └── api/               # API routes
-│   │       ├── auth/          # Signup + NextAuth
+│   │       ├── auth/          # Signup and NextAuth
 │   │       ├── modules/       # Module endpoints
 │   │       ├── units/         # Unit endpoints
 │   │       ├── progress/      # Progress tracking
-│   │       ├── reflection/    # Reflection save/fetch
+│   │       ├── reflection/    # Reflection storage
 │   │       ├── quiz/          # Quiz submission
 │   │       ├── submission/    # Project submissions
-│   │       └── admin/         # Admin stats
+│   │       └── admin/         # Admin statistics
 │   ├── components/
 │   │   ├── ui/                # Button, Card, Badge, Input, Progress, Textarea
 │   │   ├── lesson/            # FlipCard, QuizSection, Reflection, VideoEmbed
@@ -81,11 +84,11 @@ lms-app/
 │   │   └── session-provider.tsx
 │   ├── lib/
 │   │   ├── auth.ts            # NextAuth configuration
-│   │   ├── db.ts              # Prisma client singleton
+│   │   ├── db.ts              # Prisma client
 │   │   └── utils.ts           # cn() utility
 │   ├── types/
 │   │   └── next-auth.d.ts     # Session type extensions
-│   └── middleware.ts           # Route protection
+│   └── middleware.ts          # Route protection
 ```
 
 ---
@@ -93,13 +96,13 @@ lms-app/
 ## Database Schema
 
 ```
-User ──────────── Progress (userId + unitId unique)
-  │                    │
-  ├── Reflection ──────┤
-  │                    │
-  └── Submission       Unit ── FlipCard
-                        │
-               Module ──┘── QuizQuestion
+User -------- Progress (userId + unitId unique)
+  │                │
+  ├── Reflection --┤
+  │                │
+  └── Submission   Unit -- FlipCard
+                    │
+             Module ── QuizQuestion
 ```
 
 **Models:** User, Module, Unit, FlipCard, QuizQuestion, Reflection, Progress, Submission
@@ -109,17 +112,17 @@ User ──────────── Progress (userId + unitId unique)
 ## API Endpoints
 
 | Method | Endpoint | Description |
-|--------|---------|-------------|
-| POST | `/api/auth/signup` | Register new user |
+|------|---------|-------------|
+| POST | `/api/auth/signup` | Register a new user |
 | * | `/api/auth/[...nextauth]` | NextAuth handler |
-| GET | `/api/modules` | List all modules with units |
-| GET | `/api/modules/[id]` | Get module detail |
-| GET | `/api/units/[id]` | Get unit with flip cards & quiz |
-| POST/GET | `/api/progress` | Mark complete / fetch progress |
-| POST/GET | `/api/reflection` | Save / fetch reflections |
-| POST | `/api/quiz/submit` | Submit quiz (60% pass) |
-| POST/GET | `/api/submission` | Create / fetch project submissions |
-| GET | `/api/admin/stats` | Admin platform statistics |
+| GET | `/api/modules` | List modules with units |
+| GET | `/api/modules/[id]` | Module details |
+| GET | `/api/units/[id]` | Unit with flip cards and quiz |
+| POST/GET | `/api/progress` | Mark unit complete or fetch progress |
+| POST/GET | `/api/reflection` | Save or fetch reflections |
+| POST | `/api/quiz/submit` | Submit quiz (60% passing score) |
+| POST/GET | `/api/submission` | Create or fetch project submissions |
+| GET | `/api/admin/stats` | Platform statistics for admin |
 
 ---
 
@@ -128,7 +131,7 @@ User ──────────── Progress (userId + unitId unique)
 ### Prerequisites
 
 - Node.js 18+
-- A [Supabase](https://supabase.com) project (free tier works)
+- A [Supabase](https://supabase.com) project (the free tier works fine)
 
 ### Installation
 
@@ -143,7 +146,7 @@ npm install
 
 ### Environment Setup
 
-Create a `.env` file in `lms-app/`:
+Create a `.env` file inside `lms-app/`.
 
 ```env
 DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
@@ -160,22 +163,26 @@ npx prisma db push
 # Generate Prisma client
 npx prisma generate
 
-# Seed with course content (3 modules, 12 units, flip cards, quizzes)
+# Seed the database with course content
 npx prisma db seed
 ```
 
-### Run
+### Run the Project
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open:
+
+```
+http://localhost:3000
+```
 
 ### Default Accounts
 
 | Role | Email | Password |
-|------|-------|----------|
+|-----|------|----------|
 | Admin | admin@fli.org | admin123 |
 | Student | student@fli.org | student123 |
 
@@ -183,19 +190,22 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## Course Content
 
-### Module 1 — Understanding the Global Metacrisis
+### Module 1: Understanding the Global Metacrisis
+
 - Unit 1.1: The Metacrisis: Why Everything Feels Connected
 - Unit 1.2: Living in a VUCA World
 - Unit 1.3: Planetary Boundaries
 - Unit 1.4: Environmental Awakening: A Timeline
 
-### Module 2 — Rethinking the Economy
+### Module 2: Rethinking the Economy
+
 - Unit 2.1: From Industrial Economy to Green Economy
 - Unit 2.2: Doughnut Economics
 - Unit 2.3: Circular Economy
 - Unit 2.4: Regenerative Economy
 
-### Module 3 — Climate Solutions & Green Innovation
+### Module 3: Climate Solutions and Green Innovation
+
 - Unit 3.1: The Energy Transition
 - Unit 3.2: Renewable Energy Revolution
 - Unit 3.3: Climate Tech Startups
@@ -205,4 +215,4 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## License
 
-This project is built for the FLI Green Skills Academy.
+This project was developed for the **FLI Green Skills Academy**.
