@@ -1,0 +1,103 @@
+// FLI Green Skills LMS - Prisma Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  role         Role         @default(STUDENT)
+  createdAt    DateTime     @default(now())
+  reflections  Reflection[]
+  progress     Progress[]
+  submissions  Submission[]
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  order       Int
+  createdAt   DateTime @default(now())
+  units       Unit[]
+}
+
+model Unit {
+  id               String         @id @default(uuid())
+  moduleId         String
+  module           Module         @relation(fields: [moduleId], references: [id])
+  title            String
+  intro            String
+  conceptText      String
+  frameworkText     String
+  caseStudy        String
+  videoUrl         String?
+  reflectionPrompt String
+  order            Int
+  flipCards        FlipCard[]
+  quizQuestions    QuizQuestion[]
+  reflections      Reflection[]
+  progress         Progress[]
+}
+
+model FlipCard {
+  id     String @id @default(uuid())
+  unitId String
+  unit   Unit   @relation(fields: [unitId], references: [id])
+  front  String
+  back   String
+}
+
+model QuizQuestion {
+  id            String @id @default(uuid())
+  unitId        String
+  unit          Unit   @relation(fields: [unitId], references: [id])
+  question      String
+  options       Json
+  correctAnswer String
+}
+
+model Reflection {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  unitId    String
+  unit      Unit     @relation(fields: [unitId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Progress {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  unitId      String
+  unit        Unit      @relation(fields: [unitId], references: [id])
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  @@unique([userId, unitId])
+}
+
+model Submission {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  fileUrl   String?
+  text      String?
+  createdAt DateTime @default(now())
+}
